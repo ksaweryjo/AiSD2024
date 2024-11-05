@@ -52,7 +52,7 @@ void ternaryHeapify(float arr[], int n, int i, int& comparisons, int& assignment
 
     if (largest != i) {
         std::swap(arr[i], arr[largest]);
-        assignments += 2;  // Przypisania dla zamiany
+        assignments += 3;  // Przypisania dla zamiany
         ternaryHeapify(arr, n, largest, comparisons, assignments);
     }
 }
@@ -64,7 +64,7 @@ void ternaryHeapSort(float arr[], int n, int& comparisons, int& assignments) {
 
     for (int i = n - 1; i >= 0; --i) {
         std::swap(arr[0], arr[i]);
-        assignments += 2;  // Przypisania dla zamiany
+        assignments += 3;  // Przypisania dla zamiany
         ternaryHeapify(arr, i, 0, comparisons, assignments);
     }
 }
