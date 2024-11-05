@@ -60,7 +60,7 @@ void ternaryHeapify(float arr[], int n, int i, int& comparisons, int& assignment
 
 // Sortowanie przez kopcowanie
 void ternaryHeapSort(float arr[], int n, int& comparisons, int& assignments) {
-    for (int i = n / 3 - 1; i >= 0; --i) ternaryHeapify(arr, n, i, comparisons, assignments);
+    for (int i = n / 3; i >= 0; --i) ternaryHeapify(arr, n, i, comparisons, assignments);
 
     for (int i = n - 1; i >= 0; --i) {
         std::swap(arr[0], arr[i]);
