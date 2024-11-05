@@ -1,5 +1,45 @@
 #include <iostream>
 
+void heapify(int arr[], int n, int i, int& comparisons, int& assignments) {
+    int largest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+
+    if (left < n) {
+        comparisons++; // Porównanie dla lewe dziecko
+        if (arr[left] > arr[largest]) {
+            largest = left;
+        }
+    }
+
+    if (right < n) {
+        comparisons++; // Porównanie dla prawe dziecko
+        if (arr[right] > arr[largest]) {
+            largest = right;
+        }
+    }
+
+    if (largest != i) {
+        std::swap(arr[i], arr[largest]);
+        assignments += 3; // Trzy przypisania w swapie
+
+        heapify(arr, n, largest, comparisons, assignments);
+    }
+}
+
+void heapSort(int arr[], int n, int& comparisons, int& assignments) {
+    for (int i = n / 2 - 1; i >= 0; i--) {
+        heapify(arr, n, i, comparisons, assignments);
+    }
+
+    for (int i = n - 1; i > 0; i--) {
+        std::swap(arr[0], arr[i]);
+        assignments += 3; // Trzy przypisania w swapie
+
+        heapify(arr, i, 0, comparisons, assignments);
+    }
+}
+
 void ternaryHeapify(int arr[], int n, int i, int& comparisons, int& assignments) {
     int largest = i;
     int left = 3 * i + 1;

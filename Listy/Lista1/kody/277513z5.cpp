@@ -5,7 +5,7 @@
 #include "277513z2.h"
 #include "277513z3.h"
 
-const int SIZE = 10000;  // Rozmiar dużej tablicy testowej
+const int SIZE = 100000;  // Rozmiar dużej tablicy testowej
 
 void generateRandomArray(int arr[], int n) {
     for (int i = 0; i < n; ++i) {
@@ -51,13 +51,13 @@ int main() {
     // 4. Test Merge Sort (Modified Three-Way Merge)
     copyArray(originalArray, arr, SIZE);
     comparisons = assignments = 0;
-    mergeSort(arr, 0, SIZE - 1, comparisons, assignments);
+    mergeSort3way(arr, 0, SIZE - 1, comparisons, assignments);
     std::cout << "Merge Sort (Three-Way) - Comparisons: " << comparisons << ", Assignments: " << assignments << std::endl;
 
     // 5. Test Heap Sort
     copyArray(originalArray, arr, SIZE);
     comparisons = assignments = 0;
-    ternaryHeapSort(arr, SIZE, comparisons, assignments);
+    heapSort(arr, SIZE, comparisons, assignments);
     std::cout << "Heap Sort - Comparisons: " << comparisons << ", Assignments: " << assignments << std::endl;
 
     // 6. Test Heap Sort (Modified Ternary Heap)

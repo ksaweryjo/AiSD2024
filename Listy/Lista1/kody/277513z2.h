@@ -1,6 +1,54 @@
 #include <iostream>
 
-void merge(int arr[], int left, int mid1, int mid2, int right, int& comparisons, int& assignments) {
+void merge(int arr[], int left, int mid, int right, int& comparisons, int& assignments) {
+    int n1 = mid - left + 1;
+    int n2 = right - mid;
+
+    int* L = new int[n1];
+    int* R = new int[n2];
+
+    for (int i = 0; i < n1; i++) {
+        L[i] = arr[left + i];
+        assignments++;
+    }
+    for (int j = 0; j < n2; j++) {
+        R[j] = arr[mid + 1 + j];
+        assignments++;
+    }
+
+    int i = 0, j = 0, k = left;
+    while (i < n1 && j < n2) {
+        comparisons++;
+        if (L[i] <= R[j]) {
+            arr[k] = L[i];
+            i++;
+        } else {
+            arr[k] = R[j];
+            j++;
+        }
+        assignments++;
+        k++;
+    }
+
+    while (i < n1) {
+        arr[k] = L[i];
+        i++;
+        k++;
+        assignments++;
+    }
+
+    while (j < n2) {
+        arr[k] = R[j];
+        j++;
+        k++;
+        assignments++;
+    }
+
+    delete[] L;
+    delete[] R;
+}
+
+void merge3way(int arr[], int left, int mid1, int mid2, int right, int& comparisons, int& assignments) {
     int temp[right - left + 1];
     int i = left, j = mid1 + 1, k = mid2 + 1, idx = 0;
 
@@ -36,8 +84,19 @@ void merge(int arr[], int left, int mid1, int mid2, int right, int& comparisons,
     for (int l = 0; l < idx; ++l) arr[left + l] = temp[l];
 }
 
-// Sortowanie przez scalanie z trzema punktami podziału
 void mergeSort(int arr[], int left, int right, int& comparisons, int& assignments) {
+    if (left < right) {
+        int mid = left + (right - left) / 2;
+
+        mergeSort(arr, left, mid, comparisons, assignments);
+        mergeSort(arr, mid + 1, right, comparisons, assignments);
+
+        merge(arr, left, mid, right, comparisons, assignments);
+    }
+}
+
+// Sortowanie przez scalanie z trzema punktami podziału
+void mergeSort3way(int arr[], int left, int right, int& comparisons, int& assignments) {
     if (left < right) {
         comparisons++;
         int third = (right - left) / 3;
@@ -48,6 +107,6 @@ void mergeSort(int arr[], int left, int right, int& comparisons, int& assignment
         mergeSort(arr, mid1 + 1, mid2, comparisons, assignments);
         mergeSort(arr, mid2 + 1, right, comparisons, assignments);
 
-        merge(arr, left, mid1, mid2, right, comparisons, assignments);
+        merge3way(arr, left, mid1, mid2, right, comparisons, assignments);
     }
 }
