@@ -103,9 +103,9 @@ void mergeSort3way(float arr[], int left, int right, int& comparisons, int& assi
         int mid1 = left + third;
         int mid2 = right - third;
 
-        mergeSort(arr, left, mid1, comparisons, assignments);
-        mergeSort(arr, mid1 + 1, mid2, comparisons, assignments);
-        mergeSort(arr, mid2 + 1, right, comparisons, assignments);
+        mergeSort3way(arr, left, mid1, comparisons, assignments);
+        mergeSort3way(arr, mid1 + 1, mid2, comparisons, assignments);
+        mergeSort3way(arr, mid2 + 1, right, comparisons, assignments);
 
         merge3way(arr, left, mid1, mid2, right, comparisons, assignments);
     }
