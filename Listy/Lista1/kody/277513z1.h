@@ -1,8 +1,8 @@
 #include <iostream>
 
-void insertionSort(int arr[], int n, int& comparisons, int& assignments) {
+void insertionSort(float arr[], int n, int& comparisons, int& assignments) {
     for (int i = 1; i < n; i++) {
-        int key = arr[i];
+        float key = arr[i];
         assignments++;  // Przypisanie dla key
         int j = i - 1;
         while (j >= 0 && comparisons++ && arr[j] > key) {  // Porównanie i przesunięcie
@@ -16,10 +16,10 @@ void insertionSort(int arr[], int n, int& comparisons, int& assignments) {
 }
 
 // Modyfikacja z wstawianiem dwóch elementów naraz
-void insertionSortDouble(int arr[], int n, int& comparisons, int& assignments) {
+void insertionSortDouble(float arr[], int n, int& comparisons, int& assignments) {
     for (int i = 2; i < n; i += 2) {
-        int key1 = arr[i];
-        int key2 = arr[i - 1];
+        float key1 = arr[i];
+        float key2 = arr[i - 1];
         assignments += 2;  // Przypisania dla key1 i key2
 
         if (comparisons++ && key1 < key2) {

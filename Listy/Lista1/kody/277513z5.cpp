@@ -7,25 +7,25 @@
 
 const int SIZE = 100000;  // Rozmiar dużej tablicy testowej
 
-void generateRandomArray(int arr[], int n) {
-    for (int i = 0; i < n; ++i) {
+void generateRandomArray(float arr[], int n) {
+    for (int i = 0; i < n; i++) {
         arr[i] = rand() % 100000;  // Generuje liczby losowe do 100000
     }
 }
 
-void copyArray(int source[], int destination[], int n) {
-    for (int i = 0; i < n; ++i) {
+void copyArray(float source[], float destination[], int n) {
+    for (int i = 0; i < n; i++) {
         destination[i] = source[i];
     }
 }
 
 int main() {
     srand(time(0));
-    int originalArray[SIZE];
+    float originalArray[SIZE];
     generateRandomArray(originalArray, SIZE);
 
     // Tablice dla kopii testowych
-    int arr[SIZE];
+    float arr[SIZE];
 
     // Zmienne do przechowywania liczby porównań i przypisań
     int comparisons, assignments;
