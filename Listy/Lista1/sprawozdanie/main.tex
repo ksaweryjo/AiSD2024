@@ -54,7 +54,7 @@ Dzięki temu podejściu liczba operacji wstawiania może zostać zmniejszona, gd
 
 \newpage
 \begin{lstlisting}[language=C++,caption=Insertion Sort z wstawianiem dwóch elementów]
-void insertionSortDouble(float arr[], int n, int& comparisons, int& assignments) {    
+void insertionSortDouble(float arr[], int n, unsigned long long& comparisons, unsigned long long& assignments) {    
     for (int i = 2; i < n; i += 2) {
         float key1 = arr[i];
         float key2 = arr[i - 1];
@@ -114,9 +114,55 @@ Algorytm \textit{Merge Sort} w klasycznej wersji dzieli tablicę na dwie częśc
 Zmiana ta powoduje, że podczas łączenia musimy operować na trzech posortowanych fragmentach, co zwiększa złożoność procesu scalania, ponieważ liczba operacji porównawczych wzrasta. Z drugiej strony zmniejsza się liczba poziomów rekurencji, co może przyspieszyć algorytm.
 \newpage
 \begin{lstlisting}[language=C++,caption=Merge Sort z podziałem na trzy części]
-void mergeSort3way(float arr[], int left, int right, int& comparisons, int& assignments) {
-    if (left < right) {
+void merge3way(float arr[], int left, int mid1, int mid2, int right, unsigned long long& comparisons, unsigned long long& assignments) {
+    float temp[right - left + 1];
+    int i = left, j = mid1 + 1, k = mid2 + 1, idx = 0;
+
+    while (i <= mid1 && j <= mid2 && k <= right) {
+        if (arr[i] <= arr[j] && arr[i] <= arr[k]) temp[idx++] = arr[i++];
+        else if (arr[j] <= arr[i] && arr[j] <= arr[k]) temp[idx++] = arr[j++];
+        else temp[idx++] = arr[k++];
+        comparisons += 2;
+        assignments++;
+    }
+    
+    while (i <= mid1 && j <= mid2) {
+        temp[idx++] = arr[i] <= arr[j] ? arr[i++] : arr[j++];
         comparisons++;
+        assignments++;
+    }
+    while (j <= mid2 && k <= right) {
+        temp[idx++] = arr[j] <= arr[k] ? arr[j++] : arr[k++];
+        comparisons++;
+        assignments++;
+    }
+    while (i <= mid1 && k <= right) {
+        temp[idx++] = arr[i] <= arr[k] ? arr[i++] : arr[k++];
+        comparisons++;
+        assignments++;
+    }
+
+    while (i <= mid1) {
+        temp[idx++] = arr[i++];
+        assignments++;
+    }
+    while (j <= mid2) {
+        temp[idx++] = arr[j++];
+        assignments++;
+    }
+    while (k <= right) {
+        temp[idx++] = arr[k++];
+        assignments++;
+    }
+
+    for (int l = 0; l < idx; ++l) {
+        arr[left + l] = temp[l];
+        assignments++;
+    }
+}
+
+void mergeSort3way(float arr[], int left, int right, unsigned long long& comparisons, unsigned long long& assignments) {
+    if (left < right) {
         int third = (right - left) / 3;
         int mid1 = left + third;
         int mid2 = right - third;
@@ -143,7 +189,7 @@ W modyfikacji \textit{Heap Sort} zastosowano kopiec ternarny, w którym każdy w
 Poniżej przedstawiono fragment kodu implementującego \textit{Heap Sort} z kopcem ternarnym:
 
 \begin{lstlisting}[language=C++,caption=Heap Sort z kopcem ternarnym]
-void ternaryHeapify(float arr[], int n, int i, int& comparisons, int& assignments) {
+void ternaryHeapify(float arr[], int n, int i, unsigned long long& comparisons, unsigned long long& assignments) {
     int largest = i;
     int left = 3 * i + 1;
     int middle = 3 * i + 2;
@@ -160,52 +206,52 @@ void ternaryHeapify(float arr[], int n, int i, int& comparisons, int& assignment
     }
 }
 
-void ternaryHeapSort(float arr[], int n, int& comparisons, int& assignments) {
+void ternaryHeapSort(float arr[], int n, unsigned long long& comparisons, unsigned long long& assignments) {
     for (int i = n / 3; i >= 0; --i) ternaryHeapify(arr, n, i, comparisons, assignments);
 
     for (int i = n - 1; i >= 0; --i) {
         std::swap(arr[0], arr[i]);
-        assignments += 3;
+        assignments += 3;  // Przypisania dla zamiany
         ternaryHeapify(arr, i, 0, comparisons, assignments);
     }
 }
 \end{lstlisting}
 \newpage
 \section{Analiza i Wyniki}
-Testy przeprowadzono na losowych tablicach o rozmiarach 1000, 5000, 10000 elementów. Dla każdego algorytmu zliczono liczbę porównań oraz przypisań.
+Testy przeprowadzono na losowych tablicach o rozmiarach 10, 10000, 100000 elementów. Dla każdego algorytmu zliczono średnią liczbę porównań, przypisań i czas wykonania.
 
 \subsection{Tabela Wyników}
-\begin{longtable}{|c|c|c|c|c|}
+\begin{longtable}{|c|c|c|c|c|c|}
 \hline
-Rozmiar danych & Algorytm & Porównania & Przypisania \\
+Rozmiar danych & Algorytm & Porównania & Przypisania & Czas(s) \\
 \hline
-10 & Insertion Sort & 18 & 27 \\
-10 & Insertion Sort (Double) & 16 & 27 \\
-10 & Merge Sort & 22 & 68 \\
-10 & Merge Sort (Three-Way) & 37 & 55 \\
-10 & Heap Sort & 37 & 78 \\
-10 & Heap Sort (Ternary) & 41 & 46 \\
+10 & Insertion Sort & 16 & 34 & 1.8e-07 \\
+10 & Insertion Sort (Double) & 15 & 27 & 9e-08 \\
+10 & Merge Sort & 23 & 68 & 2.41e-06 \\
+10 & Merge Sort (Three-Way) & 22 & 52 & 3.1e-07 \\
+10 & Heap Sort & 23 & 78 & 3.3e-07 \\
+10 & Heap Sort (Ternary) & 40 & 69 & 9.3e-07 \\
 \hline
-10000 & Insertion Sort & 24886600 & 24896608 \\
-10000 & Insertion Sort (Double) & 12312894 & 12327768 \\
-10000 & Merge Sort & 120429 & 267232 \\
-10000 & Merge Sort (Three-Way) & 226002 & 166360 \\
-10000 & Heap Sort & 235363 & 372447 \\
-10000 & Heap Sort (Ternary) & 226431 & 166800 \\
+10000 & Insertion Sort & 25377684 & 25397682 & 0.0454163 \\
+10000 & Insertion Sort (Double) & 12743307 & 12755796 & 0.0266696 \\
+10000 & Merge Sort & 120423 & 267232 & 0.00202331 \\
+10000 & Merge Sort (Three-Way) & 149314 & 173914 & 0.00093419 \\
+10000 & Heap Sort & 166316 & 372396 & 0.00142246 \\
+10000 & Heap Sort (Ternary) & 226539 & 250245 & 0.00134903 \\
 \hline
-100000 & Insertion Sort & 1450825191 & 1450946597 \\
-100000 & Insertion Sort (Double) & 1250835994 & 1250985962 \\
-100000 & Merge Sort & 1536358 & 3337856 \\
-100000 & Merge Sort (Three-Way) & 2886413 & 2094331 \\
-100000 & Heap Sort & 3019604 & 4724586 \\
-100000 & Heap Sort (Ternary) & 2897214 & 2090924 \\
+100000 & Insertion Sort & 2495403337 & 2495603335 & 4.485 \\
+100000 & Insertion Sort (Double) & 1246284306 & 1246409672 & 2.25296 \\
+100000 & Merge Sort & 1536679 & 3337856 & 0.0197074 \\
+100000 & Merge Sort (Three-Way) & 1911782 & 2175230 & 0.0120563 \\
+100000 & Heap Sort & 2163214 & 4725123 & 0.0175235 \\
+100000 & Heap Sort (Ternary) & 2897570 & 3136902 & 0.0172788 \\
 \hline
 \caption{Porównanie liczby operacji dla różnych rozmiarów danych}
 \label{tab:results}
 \end{longtable}
 
 \subsection{Wykresy Wyników}
-Poniżej przedstawiono wykresy liczby porównań i przypisań dla poszczególnych algorytmów w zależności od rozmiaru danych.
+Poniżej przedstawiono wykresy liczby porównań, przypisań i czasów dla Merge i Heap sorta w zależności od rozmiaru danych.
 
 \begin{figure}[H]
     \centering
@@ -218,8 +264,8 @@ Poniżej przedstawiono wykresy liczby porównań i przypisań dla poszczególnyc
             grid=major,
         ]
         
-        \addplot coordinates {(10, 55 ) (10000, 226002 ) (100000, 1676330 )};
-        \addplot coordinates {(10, 46 ) (10000, 166800 ) (100000, 2090924 )};
+        \addplot coordinates {(10, 22 ) (10000, 149314 ) (100000, 1911782 )};
+        \addplot coordinates {(10, 40 ) (10000, 226539 ) (100000, 2897570 )};
         \legend{Merge Sort, Heap Sort}
         \end{axis}
     \end{tikzpicture}
@@ -237,22 +283,42 @@ Poniżej przedstawiono wykresy liczby porównań i przypisań dla poszczególnyc
             grid=major,
         ]
         
-        \addplot coordinates {(10, 37 ) (10000, 166360 ) (100000, 3206783 )};
-        \addplot coordinates {(10, 41 ) (10000, 226431 ) (100000, 2897214 )};
+        \addplot coordinates {(10, 52 ) (10000, 173914 ) (100000, 2175230 )};
+        \addplot coordinates {(10, 69 ) (10000, 250245 ) (100000, 3136902 )};
         \legend{Merge Sort, Heap Sort}
         \end{axis}
     \end{tikzpicture}
     \caption{Liczba przypisań w zależności od rozmiaru danych}
 \end{figure}
 
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+            width=\textwidth,
+            xlabel={Rozmiar danych},
+            ylabel={Czas (s)},
+            legend pos=north west,
+            grid=major,
+        ]
+        
+        \addplot coordinates {(10, 3.1e-07 ) (10000, 0.00093419 ) (100000, 0.0120563 )};
+        \addplot coordinates {(10, 9.3e-07 ) (10000, 0.00134903 ) (100000, 0.0172788 )};
+        \legend{Merge Sort, Heap Sort}
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Czas wykonania w zależności od rozmiaru danych}
+\end{figure}
+
+\newpage
 \section{Wnioski}
 Przeprowadzona analiza wykazała, że:
 \begin{itemize}
-    \item \textit{Insertion Sort} z wstawianiem dwóch elementów zmniejsza liczbę operacji dla małych zestawów danych, lecz staje się mniej efektywny przy dużych rozmiarach tablicy.
+    \item \textit{Insertion Sort} z wstawianiem dwóch elementów zmniejsza liczbę operacji dla małych zestawów danych, lecz liczba operacji, które wykonuje powoduje, że jest mniej efektywny niż Merge i Heap sort.
     \item \textit{Merge Sort} z podziałem na trzy części zwiększa złożoność algorytmu, co skutkuje większą liczbą porównań, ale zmniejsza liczbę przypisań w porównaniu do tradycyjnego \textit{Merge Sort}.
     \item \textit{Heap Sort} z kopcem ternarnym zmniejsza głębokość kopca, co skraca liczbę operacji porównawczych przy dużych zbiorach danych, jednak zwiększa liczbę przypisań.
 \end{itemize}
 
-Z tego względu, klasyczna wersja \textit{Merge Sort} okazała się najbardziej efektywna przy dużych danych, zachowując korzystną równowagę między liczbą porównań a liczbą przypisań.
+Z tego względu, klasyczna wersja i zmodyfikowana wersja \textit{Merge Sort} okazały się najbardziej efektywne przy dużych danych, zachowując korzystną równowagę między liczbą porównań a liczbą przypisań.
 
 \end{document}
