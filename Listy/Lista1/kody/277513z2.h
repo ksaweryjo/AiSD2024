@@ -1,6 +1,6 @@
 #include <iostream>
 
-void merge(float arr[], int left, int mid, int right, int& comparisons, int& assignments) {
+void merge(float arr[], int left, int mid, int right, unsigned long long& comparisons, unsigned long long& assignments) {
     int n1 = mid - left + 1;
     int n2 = right - mid;
 
@@ -18,7 +18,6 @@ void merge(float arr[], int left, int mid, int right, int& comparisons, int& ass
 
     int i = 0, j = 0, k = left;
     while (i < n1 && j < n2) {
-        comparisons++;
         if (L[i] <= R[j]) {
             arr[k] = L[i];
             i++;
@@ -26,6 +25,7 @@ void merge(float arr[], int left, int mid, int right, int& comparisons, int& ass
             arr[k] = R[j];
             j++;
         }
+        comparisons++;
         assignments++;
         k++;
     }
@@ -48,43 +48,54 @@ void merge(float arr[], int left, int mid, int right, int& comparisons, int& ass
     delete[] R;
 }
 
-void merge3way(float arr[], int left, int mid1, int mid2, int right, int& comparisons, int& assignments) {
+void merge3way(float arr[], int left, int mid1, int mid2, int right, unsigned long long& comparisons, unsigned long long& assignments) {
     float temp[right - left + 1];
     int i = left, j = mid1 + 1, k = mid2 + 1, idx = 0;
 
     while (i <= mid1 && j <= mid2 && k <= right) {
-        comparisons += 3;  // Trzy porównania
         if (arr[i] <= arr[j] && arr[i] <= arr[k]) temp[idx++] = arr[i++];
         else if (arr[j] <= arr[i] && arr[j] <= arr[k]) temp[idx++] = arr[j++];
         else temp[idx++] = arr[k++];
+        comparisons += 2;
         assignments++;  // Przypisanie do temp
     }
     
     while (i <= mid1 && j <= mid2) {
-        comparisons++;
         temp[idx++] = arr[i] <= arr[j] ? arr[i++] : arr[j++];
+        comparisons++;
         assignments++;
     }
     while (j <= mid2 && k <= right) {
-        comparisons++;
         temp[idx++] = arr[j] <= arr[k] ? arr[j++] : arr[k++];
+        comparisons++;
         assignments++;
     }
     while (i <= mid1 && k <= right) {
-        comparisons++;
         temp[idx++] = arr[i] <= arr[k] ? arr[i++] : arr[k++];
+        comparisons++;
         assignments++;
     }
 
-    while (i <= mid1) temp[idx++] = arr[i++];
-    while (j <= mid2) temp[idx++] = arr[j++];
-    while (k <= right) temp[idx++] = arr[k++];
-    assignments += idx;
+    while (i <= mid1) {
+        temp[idx++] = arr[i++];
+        assignments++;
+    }
+    while (j <= mid2) {
+        temp[idx++] = arr[j++];
+        assignments++;
+    }
+    while (k <= right) {
+        temp[idx++] = arr[k++];
+        assignments++;
+    }
 
-    for (int l = 0; l < idx; ++l) arr[left + l] = temp[l];
+    for (int l = 0; l < idx; ++l) {
+        arr[left + l] = temp[l];
+        assignments++;
+    }
 }
 
-void mergeSort(float arr[], int left, int right, int& comparisons, int& assignments) {
+void mergeSort(float arr[], int left, int right, unsigned long long& comparisons, unsigned long long& assignments) {
     if (left < right) {
         int mid = left + (right - left) / 2;
 
@@ -96,9 +107,8 @@ void mergeSort(float arr[], int left, int right, int& comparisons, int& assignme
 }
 
 // Sortowanie przez scalanie z trzema punktami podziału
-void mergeSort3way(float arr[], int left, int right, int& comparisons, int& assignments) {
+void mergeSort3way(float arr[], int left, int right, unsigned long long& comparisons, unsigned long long& assignments) {
     if (left < right) {
-        comparisons++;
         int third = (right - left) / 3;
         int mid1 = left + third;
         int mid2 = right - third;

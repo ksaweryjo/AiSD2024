@@ -1,20 +1,20 @@
 #include <iostream>
 
-void heapify(float arr[], int n, int i, int& comparisons, int& assignments) {
+void heapify(float arr[], int n, int i, unsigned long long& comparisons, unsigned long long& assignments) {
     int largest = i;
     int left = 2 * i + 1;
     int right = 2 * i + 2;
 
     if (left < n) {
-        comparisons++; // Porównanie dla lewe dziecko
         if (arr[left] > arr[largest]) {
+            comparisons++;
             largest = left;
         }
     }
 
     if (right < n) {
-        comparisons++; // Porównanie dla prawe dziecko
         if (arr[right] > arr[largest]) {
+            comparisons++;
             largest = right;
         }
     }
@@ -27,7 +27,7 @@ void heapify(float arr[], int n, int i, int& comparisons, int& assignments) {
     }
 }
 
-void heapSort(float arr[], int n, int& comparisons, int& assignments) {
+void heapSort(float arr[], int n, unsigned long long& comparisons, unsigned long long& assignments) {
     for (int i = n / 2 - 1; i >= 0; i--) {
         heapify(arr, n, i, comparisons, assignments);
     }
@@ -40,7 +40,7 @@ void heapSort(float arr[], int n, int& comparisons, int& assignments) {
     }
 }
 
-void ternaryHeapify(float arr[], int n, int i, int& comparisons, int& assignments) {
+void ternaryHeapify(float arr[], int n, int i, unsigned long long& comparisons, unsigned long long& assignments) {
     int largest = i;
     int left = 3 * i + 1;
     int middle = 3 * i + 2;
@@ -59,7 +59,7 @@ void ternaryHeapify(float arr[], int n, int i, int& comparisons, int& assignment
 
 
 // Sortowanie przez kopcowanie
-void ternaryHeapSort(float arr[], int n, int& comparisons, int& assignments) {
+void ternaryHeapSort(float arr[], int n, unsigned long long& comparisons, unsigned long long& assignments) {
     for (int i = n / 3; i >= 0; --i) ternaryHeapify(arr, n, i, comparisons, assignments);
 
     for (int i = n - 1; i >= 0; --i) {
