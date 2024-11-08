@@ -30,25 +30,25 @@ void insertionSortDouble(float arr[], int n, unsigned long long& comparisons, un
 
         int j = i - 2;
 
-        while (j >= 0 && ++comparisons && arr[j] > key2) {
-            arr[j + 2] = arr[j];
-            assignments++;  // Przypisanie dla przesunięcia
-            j--;
-        }
-
-        arr[j + 1] = key2;
-        assignments++;  // Przypisanie dla key2
-
         while (j >= 0 && ++comparisons && arr[j] > key1) {
-            arr[j + 1] = arr[j];
+            arr[j + 2] = arr[j];
             assignments++;  // Przypisanie dla przesunięcia
             j--;
         }
 
         arr[j + 2] = key1;
         assignments++;  // Przypisanie dla key1
+        
+        while (j >= 0 && ++comparisons && arr[j] > key2) {
+            arr[j + 1] = arr[j];
+            assignments++;  // Przypisanie dla przesunięcia
+            j--;
+        }
+
+        arr[j + 1] = key2;
+        assignments++;  // Przypisanie dla key2
     }
-    if ((n+1) % 2 == 0) {
+    if (n % 2 == 0) {
         int lastKey = arr[n - 1];
         assignments++;  // Przypisanie dla lastKey
         int j = n - 2;
