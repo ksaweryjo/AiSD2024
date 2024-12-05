@@ -12,7 +12,7 @@ void insert(Node_2*& head, double value) {
 }
 
 void insertionSort(Node_2*& head) {
-    if (!head) return;
+    if (head == nullptr) return;
 
     Node_2* sorted = nullptr;
 

@@ -13,11 +13,11 @@ int getMax(int arr[], int n, unsigned long long& comparisons, unsigned long long
     return maxNum;
 }
 
-void countingSort(int arr[], int n, int exp, int base, unsigned long long& comparisons, unsigned long long& assignments) {
-    int output[n];
+void countingSort(int arr[], int n, int pos, int base, unsigned long long& comparisons, unsigned long long& assignments) {
+    auto output = new int[n];
     int count[base] = {0};
     for (int i = 0; i < n; i++) {
-        count[(arr[i] / exp) % base]++;
+        count[(arr[i] / pos) % base]++;
     }
 
     for (int i = 1; i < base; i++) {
@@ -26,8 +26,8 @@ void countingSort(int arr[], int n, int exp, int base, unsigned long long& compa
     }
 
     for (int i = n - 1; i >= 0; i--) {
-        output[count[(arr[i] / exp) % base] - 1] = arr[i];
-        count[(arr[i] / exp) % base]--;
+        output[count[(arr[i] / pos) % base] - 1] = arr[i];
+        count[(arr[i] / pos) % base]--;
         assignments++;
     }
 
@@ -40,8 +40,8 @@ void countingSort(int arr[], int n, int exp, int base, unsigned long long& compa
 void radixSort(int arr[], int n, int base, unsigned long long& comparisons, unsigned long long& assignments) {
     int maxNum = getMax(arr, n, comparisons, assignments);
 
-    for (int exp = 1; maxNum / exp > 0; exp *= base)
-        countingSort(arr, n, exp, base, comparisons, assignments);
+    for (int pos = 1; maxNum / pos > 0; pos *= base)
+        countingSort(arr, n, pos, base, comparisons, assignments);
 }
 
 void radixSort_negative(int arr[], int n, int base, unsigned long long& comparisons, unsigned long long& assignments) {
@@ -61,8 +61,10 @@ void radixSort_negative(int arr[], int n, int base, unsigned long long& comparis
         if (done)
             break;
 
-        for (int i = 1; i < size; i++)
+        for (int i = 1; i < size; i++) {
             counter[i] += counter[i - 1];
+            assignments++;
+        }
 
         for (int i = n; i-- > 0; ) {
             output[--counter[arr[i] / pos % base + size / 2]] = arr[i];
