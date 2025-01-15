@@ -14,7 +14,7 @@ Lista    | Done
 ---------|-------------- 
 Lista 1  | ✓  
 Lista 2  | ✓  
-Lista 3  | X 
+Lista 3  | ✓ 
 
 # How to install
 ### Works only with proper perms
